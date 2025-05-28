@@ -41,7 +41,7 @@ Dưới đây là **outline chi tiết** cho một khóa học hoặc lộ trìn
 
 ### 🗃️ **Phần 3: Kết nối CSDL với Spring Data JPA**
 
-* Cấu hình kết nối H2/MySQL
+* Cấu hình kết nối Spring Data JPA + MySQL
 * Entity & Repository:
 
   * Tạo entity với `@Entity`, `@Id`, `@GeneratedValue`
@@ -66,7 +66,7 @@ Dưới đây là **outline chi tiết** cho một khóa học hoặc lộ trìn
 
 * Pagination & Sorting:
 
-  * Sử dụng `Pageable`, `Sort`
+* Sử dụng `Pageable`, `Sort`
 * Tìm kiếm với query params
 * Mapping giữa Entity và DTO (sử dụng MapStruct hoặc tự code)
 
