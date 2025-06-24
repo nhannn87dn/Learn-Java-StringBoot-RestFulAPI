@@ -1,10 +1,6 @@
-Dưới đây là **outline chi tiết** cho một khóa học hoặc lộ trình học **Spring Boot RESTful API cho người mới bắt đầu**, được thiết kế để giúp học viên từng bước làm chủ cách xây dựng REST API với Java Spring Boot.
+# 📚 **Spring Boot RESTful API - Lộ trình cho người mới bắt đầu**
 
----
-
-## 📚 **Spring Boot RESTful API - Lộ trình cho người mới bắt đầu**
-
-### 🧩 **Phần 1: Giới thiệu & Chuẩn bị môi trường**
+## 🧩 **Phần 1: Giới thiệu & Chuẩn bị môi trường**
 
 * Giới thiệu RESTful API là gì?
 
@@ -25,7 +21,7 @@ Dưới đây là **outline chi tiết** cho một khóa học hoặc lộ trìn
 
 ---
 
-### 🧱 **Phần 2: Xây dựng REST API đơn giản**
+## 🧱 **Phần 2: Xây dựng REST API đơn giản**
 
 * Tạo ứng dụng "Hello World"
 
@@ -39,7 +35,7 @@ Dưới đây là **outline chi tiết** cho một khóa học hoặc lộ trìn
 
 ---
 
-### 🗃️ **Phần 3: Kết nối CSDL với Spring Data JPA**
+## 🗃️ **Phần 3: Kết nối CSDL với Spring Data JPA**
 
 * Cấu hình kết nối Spring Data JPA + MySQL
 * Entity & Repository:
@@ -50,7 +46,7 @@ Dưới đây là **outline chi tiết** cho một khóa học hoặc lộ trìn
 
 ---
 
-### 🧪 **Phần 4: Validation & Xử lý lỗi**
+## 🧪 **Phần 4: Validation & Xử lý lỗi**
 
 * Validate input:
 
@@ -62,7 +58,7 @@ Dưới đây là **outline chi tiết** cho một khóa học hoặc lộ trìn
 
 ---
 
-### 🔄 **Phần 5: Nâng cao REST API**
+## 🔄 **Phần 5: Nâng cao REST API**
 
 * Pagination & Sorting:
 
@@ -72,7 +68,7 @@ Dưới đây là **outline chi tiết** cho một khóa học hoặc lộ trìn
 
 ---
 
-### 🛡️ **Phần 6: Bảo mật API với Spring Security (Cơ bản)**
+## 🛡️ **Phần 6: Bảo mật API với Spring Security (Cơ bản)**
 
 * Cấu hình Spring Security mặc định
 * HTTP Basic Auth
@@ -80,14 +76,14 @@ Dưới đây là **outline chi tiết** cho một khóa học hoặc lộ trìn
 
 ---
 
-### 📄 **Phần 7: Swagger & API Documentation**
+## 📄 **Phần 7: Swagger & API Documentation**
 
 * Cài đặt và cấu hình Swagger (springdoc-openapi)
 * Truy cập giao diện Swagger UI
 
 ---
 
-### ✅ **Phần 8: Testing**
+## ✅ **Phần 8: Testing**
 
 * Unit test với `@WebMvcTest`
 * Integration test với `@SpringBootTest`
@@ -95,7 +91,7 @@ Dưới đây là **outline chi tiết** cho một khóa học hoặc lộ trìn
 
 ---
 
-### 🧠 **Phần 9: Thực hành dự án mini**
+## 🧠 **Phần 9: Thực hành dự án mini**
 
 > Ví dụ: Xây dựng API quản lý sinh viên / sản phẩm / người dùng
 
@@ -109,23 +105,8 @@ Dưới đây là **outline chi tiết** cho một khóa học hoặc lộ trìn
 
 ---
 
-### 📦 **Phần 10: Đóng gói và deploy (optional)**
+## 📦 **Phần 10: Đóng gói và deploy (optional)**
 
 * Đóng gói JAR
 * Deploy lên Heroku / Render / Railway (free)
 
----
-
-## 🧭 Gợi ý thời lượng học:
-
-| Tuần | Nội dung chính                        |
-| ---- | ------------------------------------- |
-| 1    | REST + Spring Boot cơ bản + Hello API |
-| 2    | CRUD + CSDL với Spring Data JPA       |
-| 3    | Validation + Error handling           |
-| 4    | Pagination + Swagger + Testing        |
-| 5    | Thực hành dự án mini                  |
-
----
-
-Nếu bạn muốn mình giúp viết **slide dạy học**, **bài tập thực hành**, hay một **starter project**, mình có thể hỗ trợ tiếp!

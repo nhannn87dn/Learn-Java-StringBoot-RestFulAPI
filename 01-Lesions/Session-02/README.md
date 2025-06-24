@@ -35,11 +35,17 @@ public class HelloController {
 >
 > ✅ `@GetMapping("/hello")` tạo một endpoint GET tại đường dẫn `/hello`.
 
----
-
 ## III. 📁 Routes Mapping
 
-### 1. Các Annotation cơ bản
+### 1. Controller là gì?
+
+**Controller** là lớp chịu trách nhiệm **nhận request từ client (browser, mobile, API)**, sau đó **gọi Service Layer** để xử lý logic, và **trả về response** (thường là JSON trong REST API).
+
+Trong mô hình **MVC (Model – View – Controller)**, Controller nằm ở **tầng đầu vào**.
+
+---
+
+### 2. Cấu trúc lớp Controller
 
 ```java
 @RestController
@@ -78,9 +84,10 @@ public class UserController {
 }
 ```
 
-### 2. Các cách định nghĩa route khác nhau
+### 3. Các cách định nghĩa route khác nhau
 
 #### a. Sử dụng `@RequestMapping` với method
+
 ```java
 @RequestMapping(value = "/users", method = RequestMethod.GET)
 public List<User> getAllUsers() {
@@ -89,6 +96,7 @@ public List<User> getAllUsers() {
 ```
 
 #### b. Kết hợp nhiều HTTP methods
+
 ```java
 @RequestMapping(value = "/users", method = {RequestMethod.GET, RequestMethod.POST})
 public List<User> handleUsers() {
@@ -97,6 +105,7 @@ public List<User> handleUsers() {
 ```
 
 #### c. Sử dụng `@RequestMapping` với params
+
 ```java
 @RequestMapping(value = "/search", params = "name")
 public List<User> searchByName(@RequestParam String name) {
@@ -105,6 +114,7 @@ public List<User> searchByName(@RequestParam String name) {
 ```
 
 #### d. Sử dụng `@RequestMapping` với headers
+
 ```java
 @RequestMapping(value = "/users", headers = "API-Version=1")
 public List<User> getUsersV1() {
@@ -112,19 +122,27 @@ public List<User> getUsersV1() {
 }
 ```
 
-### 3. Các annotation mapping phổ biến
+### 3. Các annotation thường dùng
 
-| Annotation     | HTTP Method | Ví dụ                    |
-|---------------|-------------|--------------------------|
-| `@GetMapping` | GET         | `@GetMapping("/users")`  |
-| `@PostMapping`| POST        | `@PostMapping("/users")` |
-| `@PutMapping` | PUT         | `@PutMapping("/users")`  |
-| `@DeleteMapping`| DELETE    | `@DeleteMapping("/users")`|
-| `@PatchMapping`| PATCH      | `@PatchMapping("/users")`|
+| Annotation        | Chức năng                                         |
+| ----------------- | ------------------------------------------------- |
+| `@RestController` | Kết hợp `@Controller` + `@ResponseBody`, trả JSON |
+| `@RequestMapping` | Mapping đường dẫn gốc                             |
+| `@GetMapping`     | Mapping cho HTTP GET                              |
+| `@PostMapping`    | Mapping cho HTTP POST                             |
+| `@PutMapping`     | Mapping cho HTTP PUT                              |
+| `@DeleteMapping`  | Mapping cho HTTP DELETE                           |
+| `@PathVariable`   | Lấy biến từ URL path                              |
+| `@RequestParam`   | Lấy tham số trên URL query                        |
+| `@RequestBody`    | Lấy dữ liệu từ phần body (POST, PUT)              |
+| `@Valid`          | Kích hoạt validation                              |
+
+---
 
 ### 4. Best Practices
 
 1. **Sử dụng base URL**: Định nghĩa base URL cho controller
+
 ```java
 @RestController
 @RequestMapping("/api/v1")
@@ -134,19 +152,22 @@ public class UserController {
 ```
 
 2. **Đặt tên resource theo danh từ số nhiều**
+
 ```java
 @GetMapping("/users")        // ✅ Tốt
 @GetMapping("/user")         // ❌ Không nên
 ```
 
 3. **Sử dụng HTTP methods đúng mục đích**
+
 - GET: Lấy dữ liệu
-- POST: Tạo mới
-- PUT: Cập nhật toàn bộ
-- PATCH: Cập nhật một phần
-- DELETE: Xóa
+* POST: Tạo mới
+* PUT: Cập nhật toàn bộ
+* PATCH: Cập nhật một phần
+* DELETE: Xóa
 
 4. **Versioning API**
+
 ```java
 @RestController
 @RequestMapping("/api/v1/users")  // Version 1
@@ -160,6 +181,7 @@ public class UserControllerV2 { }
 ### 5. Path Route và Các Pattern Matching
 
 #### a. Path Variables
+
 ```java
 // Cơ bản
 @GetMapping("/users/{id}")
@@ -181,6 +203,7 @@ public User getUser(@PathVariable("userId") Long id) {
 ```
 
 #### b. Path Pattern Matching
+
 ```java
 // Match nhiều segments
 @GetMapping("/users/**")
@@ -202,6 +225,7 @@ public User getUserById(@PathVariable Long id) {
 ```
 
 #### c. Path Parameters với Validation
+
 ```java
 @GetMapping("/users/{id}")
 public User getUser(@PathVariable @Min(1) Long id) {
@@ -215,6 +239,7 @@ public User getUserByName(@PathVariable @Size(min=2, max=50) String name) {
 ```
 
 #### d. Path Parameters với Optional
+
 ```java
 // Optional path variable
 @GetMapping({"/users", "/users/{id}"})
@@ -227,6 +252,7 @@ public Object getUsers(@PathVariable(required = false) Long id) {
 ```
 
 #### e. Path Parameters với Enum
+
 ```java
 public enum UserType {
     ADMIN, USER, GUEST
@@ -239,6 +265,7 @@ public List<User> getUsersByType(@PathVariable UserType type) {
 ```
 
 #### f. Path Parameters với Custom Converter
+
 ```java
 @Component
 public class StringToUserConverter implements Converter<String, User> {
@@ -258,6 +285,7 @@ public User getUser(@PathVariable User user) {
 ### 6. Lưu ý khi sử dụng Path Route
 
 1. **Thứ tự ưu tiên của routes**:
+
 ```java
 @GetMapping("/users/new")        // Route cụ thể
 @GetMapping("/users/{id}")       // Route với path variable
@@ -265,6 +293,7 @@ public User getUser(@PathVariable User user) {
 ```
 
 2. **Tránh xung đột routes**:
+
 ```java
 // ❌ Không nên - Gây nhầm lẫn
 @GetMapping("/users/{id}")
@@ -276,6 +305,7 @@ public User getUser(@PathVariable User user) {
 ```
 
 3. **Sử dụng constants cho paths**:
+
 ```java
 public class UserController {
     private static final String BASE_PATH = "/api/v1/users";
@@ -288,7 +318,6 @@ public class UserController {
 ```
 
 ---
-
 
 ## IV. 📁 Cấu trúc thư mục cơ bản (gợi ý)
 
@@ -311,14 +340,15 @@ src
 ### 1. DTO là gì?
 
 DTO (Data Transfer Object) là một design pattern được sử dụng để truyền dữ liệu giữa các layer của ứng dụng. Nó giúp:
-- Tách biệt dữ liệu hiển thị (presentation) khỏi dữ liệu lưu trữ (persistence)
-- Giảm số lượng request/response
-- Tăng tính bảo mật bằng cách chỉ expose những field cần thiết
-- Linh hoạt trong việc thay đổi cấu trúc dữ liệu
+* Tách biệt dữ liệu hiển thị (presentation) khỏi dữ liệu lưu trữ (persistence)
+* Giảm số lượng request/response
+* Tăng tính bảo mật bằng cách chỉ expose những field cần thiết
+* Linh hoạt trong việc thay đổi cấu trúc dữ liệu
 
 ### 2. Tại sao cần DTO?
 
 1. **Bảo mật dữ liệu**:
+
 ```java
 // Entity
 @Entity
@@ -341,6 +371,7 @@ public class UserDTO {
 ```
 
 2. **Tối ưu hiệu suất**:
+
 ```java
 // Không dùng DTO - Lấy toàn bộ dữ liệu không cần thiết
 @Entity
@@ -361,6 +392,7 @@ public class OrderSummaryDTO {
 ```
 
 3. **Linh hoạt trong versioning**:
+
 ```java
 // DTO cho API v1
 public class UserDTOV1 {
@@ -380,6 +412,7 @@ public class UserDTOV2 {
 ### 3. Các loại DTO phổ biến
 
 1. **Request DTO**:
+
 ```java
 public class CreateUserRequestDTO {
     @NotBlank
@@ -394,6 +427,7 @@ public class CreateUserRequestDTO {
 ```
 
 2. **Response DTO**:
+
 ```java
 public class UserResponseDTO {
     private Long id;
@@ -405,6 +439,7 @@ public class UserResponseDTO {
 ```
 
 3. **Update DTO**:
+
 ```java
 public class UpdateUserDTO {
     private String email;
@@ -416,6 +451,7 @@ public class UpdateUserDTO {
 ### 4. Best Practices khi sử dụng DTO
 
 1. **Sử dụng validation**:
+
 ```java
 public class UserDTO {
     @NotBlank(message = "Username is required")
@@ -430,6 +466,7 @@ public class UserDTO {
 ```
 
 2. **Sử dụng Builder Pattern**:
+
 ```java
 @Builder
 public class UserDTO {
@@ -448,6 +485,7 @@ public class UserDTO {
 ```
 
 3. **Sử dụng MapStruct để mapping**:
+
 ```java
 @Mapper
 public interface UserMapper {
@@ -486,19 +524,18 @@ public class UserController {
 ### 6. Lợi ích của việc sử dụng DTO
 
 1. **Tách biệt các layer**:
-   - Controller layer chỉ làm việc với DTO
-   - Service layer làm việc với Entity
-   - Repository layer làm việc với Entity
+   * Controller layer chỉ làm việc với DTO
+   * Service layer làm việc với Entity
+   * Repository layer làm việc với Entity
 
 2. **Dễ dàng maintain**:
-   - Thay đổi cấu trúc database không ảnh hưởng đến API
-   - Thay đổi API không ảnh hưởng đến database
+   * Thay đổi cấu trúc database không ảnh hưởng đến API
+   * Thay đổi API không ảnh hưởng đến database
 
 3. **Tăng tính bảo mật**:
-   - Kiểm soát được dữ liệu được expose ra ngoài
-   - Validate dữ liệu đầu vào một cách chặt chẽ
+   * Kiểm soát được dữ liệu được expose ra ngoài
+   * Validate dữ liệu đầu vào một cách chặt chẽ
 
 4. **Tối ưu hiệu suất**:
-   - Giảm kích thước payload
-   - Chỉ lấy những dữ liệu cần thiết
-
+   * Giảm kích thước payload
+   * Chỉ lấy những dữ liệu cần thiết

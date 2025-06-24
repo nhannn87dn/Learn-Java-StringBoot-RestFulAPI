@@ -236,6 +236,3 @@ UserDTO dto = userMapper.toDTO(user);
 2. Dùng DTO để chỉ trả về `id`, `name`, `email`, ẩn đi các trường nhạy cảm.
 3. Dùng `@Query` để tạo truy vấn phức tạp: tìm user theo tháng sinh, hoặc theo tên & tuổi.
 
----
-
-Bạn muốn mình tiếp tục với **Phần 6: OneToMany, ManyToOne – Quan hệ bảng và CRUD nhiều bảng** không? Đây là bước cực kỳ quan trọng để xây dựng ứng dụng thực tế như blog, e-commerce, quản lý đơn hàng…

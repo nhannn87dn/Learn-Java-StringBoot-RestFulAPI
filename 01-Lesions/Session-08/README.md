@@ -158,7 +158,3 @@ void testCreateUser() throws Exception {
 2. Tạo CRUD API `/api/users`, viết integration test cho `GET`, `POST`.
 3. Thử trả lỗi 404 khi gọi API sai, kiểm tra trong test.
 4. Thêm @SpringBootTest vào test class và dùng MockMvc để test luồng thực tế.
-
----
-
-Bạn có muốn mình tiếp tục với **Phần 9: Validation và Exception Handling chuẩn RESTful** không? Đây là phần giúp API bạn trở nên chuyên nghiệp hơn, phản hồi lỗi rõ ràng và chuẩn hóa cho frontend xử lý dễ dàng.

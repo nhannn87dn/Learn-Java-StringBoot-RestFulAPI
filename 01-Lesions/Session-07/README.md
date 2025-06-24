@@ -141,6 +141,3 @@ public class UserController {
 3. Tuỳ chỉnh thông tin tài liệu (title, version, contact…).
 4. Tạo một POST API và test gửi dữ liệu trực tiếp qua Swagger UI.
 
----
-
-Bạn muốn mình tiếp tục với **Phần 8: Validation và Exception Handling chuẩn** không? Đây là phần giúp bạn xử lý lỗi đầu vào và trả lỗi chuẩn REST cho frontend, rất quan trọng trong API thực tế.

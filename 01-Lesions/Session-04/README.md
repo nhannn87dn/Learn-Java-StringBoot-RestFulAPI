@@ -293,6 +293,4 @@ POST /api/users
 | `@RestControllerAdvice` + `@ExceptionHandler` | Xử lý lỗi tập trung, trả thông báo rõ ràng |
 | `ResponseEntity`                              | Tùy chỉnh mã HTTP, thông điệp phản hồi     |
 
----
-
 

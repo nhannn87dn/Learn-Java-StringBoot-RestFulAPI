@@ -1,7 +1,3 @@
-Dưới đây là phần soạn chi tiết cho người mới về:
-
----
-
 # 🔐 **Phần 6: Bảo mật API với Spring Security (Cơ bản)**
 
 ## 🎯 Mục tiêu
@@ -162,6 +158,3 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 2. Viết API `/api/secure/profile` chỉ cho truy cập nếu đã xác thực.
 3. Tạo user trong memory với vai trò `USER`, dùng Postman gửi Basic Auth.
 
----
-
-Bạn muốn tiếp tục sang **Phần 7: Quan hệ bảng (OneToMany, ManyToOne)** không? Đây là bước kế tiếp quan trọng để xây dựng hệ thống nhiều bảng như Blog, Quản lý sản phẩm - danh mục, v.v.
