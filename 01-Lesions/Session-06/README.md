@@ -122,7 +122,7 @@ public class SecurityConfig {
 * Là một **chuỗi token nhỏ** chứa thông tin người dùng đã mã hoá.
 * Không cần lưu session, thích hợp cho ứng dụng SPA (React, Angular, Mobile...).
 
-#### Ví dụ token:
+Ví dụ token:
 
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -136,23 +136,234 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 * Hỗ trợ dễ dàng phân quyền
 * Truyền qua Header dễ dàng
 
-> 🧩 JWT chi tiết (tạo token, validate token, filter…) sẽ được trình bày ở phần nâng cao sau.
+
+### 🔄 Tổng quan về cách hoạt động của JWT
+
+1. Người dùng gửi `username` & `password` → `/api/auth/login`
+2. Server xác thực và trả về một **JWT Token**
+3. Client lưu token này và đính kèm vào header ở các request sau:
+
+   ```
+   Authorization: Bearer <JWT_TOKEN>
+   ```
+4. Server kiểm tra token hợp lệ và cho phép truy cập.
 
 ---
 
-## VI. ✅ Tổng kết
+### ⚙️ Cách 1: Cấu hình JWT **thủ công (custom implementation)**
 
-| Chủ đề          | Ghi chú                                       |
-| --------------- | --------------------------------------------- |
-| Spring Security | Framework bảo mật trong Spring                |
-| Basic Auth      | Dùng cho các API đơn giản, học tập            |
-| JWT             | Dùng cho các hệ thống production REST API     |
-| Cấu hình cơ bản | Dùng `httpBasic()` và `authorizeHttpRequests` |
-| User In-Memory  | Tạo nhanh user test với Spring                |
+#### 1. Thêm thư viện JWT
+
+```xml
+<dependency>
+  <groupId>io.jsonwebtoken</groupId>
+  <artifactId>jjwt-api</artifactId>
+  <version>0.11.5</version>
+</dependency>
+<dependency>
+  <groupId>io.jsonwebtoken</groupId>
+  <artifactId>jjwt-impl</artifactId>
+  <version>0.11.5</version>
+  <scope>runtime</scope>
+</dependency>
+<dependency>
+  <groupId>io.jsonwebtoken</groupId>
+  <artifactId>jjwt-jackson</artifactId>
+  <version>0.11.5</version>
+  <scope>runtime</scope>
+</dependency>
+```
 
 ---
 
-## 📌 Gợi ý thực hành
+#### 2. Tạo lớp tiện ích JWT (JwtUtils.java)
+
+```java
+@Component
+public class JwtUtils {
+    private final String jwtSecret = "your-secret-key";
+    private final long jwtExpirationMs = 86400000; // 1 ngày
+
+    public String generateJwtToken(UserDetails userDetails) {
+        return Jwts.builder()
+            .setSubject(userDetails.getUsername())
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+            .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()), SignatureAlgorithm.HS256)
+            .compact();
+    }
+
+    public String getUsernameFromJwt(String token) {
+        return Jwts.parserBuilder()
+            .setSigningKey(jwtSecret.getBytes())
+            .build()
+            .parseClaimsJws(token)
+            .getBody()
+            .getSubject();
+    }
+
+    public boolean validateJwt(String token) {
+        try {
+            Jwts.parserBuilder()
+                .setSigningKey(jwtSecret.getBytes())
+                .build()
+                .parseClaimsJws(token);
+            return true;
+        } catch (JwtException e) {
+            return false;
+        }
+    }
+}
+```
+
+---
+
+#### 3. Tạo API Login để sinh JWT
+
+```java
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                loginRequest.getUsername(),
+                loginRequest.getPassword()
+            )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtUtils.generateJwtToken((UserDetails) authentication.getPrincipal());
+
+        return ResponseEntity.ok(new JwtResponse(token));
+    }
+}
+```
+
+---
+
+#### 4. Tạo JWT Filter để kiểm tra token
+
+```java
+public class JwtAuthFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        String header = request.getHeader("Authorization");
+
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+            if (jwtUtils.validateJwt(token)) {
+                String username = jwtUtils.getUsernameFromJwt(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}
+```
+
+---
+
+#### 5. Thêm filter vào cấu hình Spring Security
+
+```java
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Autowired
+    private JwtAuthFilter jwtAuthFilter;
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf().disable()
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+}
+```
+
+---
+
+### ⚙️ Cách 2: Dùng thư viện hỗ trợ (ví dụ: **spring-boot-starter-oauth2-resource-server**)
+
+#### Ưu điểm
+
+* Cấu hình nhanh hơn, tuân thủ chuẩn OAuth2.
+* Dùng tốt với Auth0, Keycloak, Google…
+
+#### Thêm dependency
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+</dependency>
+```
+
+#### Cấu hình `application.yml`
+
+```yaml
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://your-auth-provider.com
+```
+
+➡️ Spring Boot sẽ tự động kiểm tra token và phân quyền theo chuẩn JWT.
+
+---
+
+### 🔁 So sánh hai cách
+
+| Tiêu chí                     | Thủ công (JwtUtils + Filter) | Thư viện OAuth2      |
+| ---------------------------- | ---------------------------- | -------------------- |
+| Linh hoạt                    | ✅ Cao (custom tùy ý)         | ❌ Bị ràng buộc       |
+| Cấu hình nhanh               | ❌ Tốn thời gian cấu hình     | ✅ Nhanh chóng        |
+| Tích hợp với Auth0/OIDC      | ❌ Khó                        | ✅ Dễ                 |
+| Kiểm soát chi tiết (role...) | ✅ Tùy chỉnh sâu              | ⚠️ Cần cấu hình thêm |
+
+---
+
+
+## VI. 📌 Gợi ý thực hành
 
 1. Viết API `/api/public/hello` không cần đăng nhập.
 2. Viết API `/api/secure/profile` chỉ cho truy cập nếu đã xác thực.

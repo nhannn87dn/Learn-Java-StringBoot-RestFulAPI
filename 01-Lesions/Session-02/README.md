@@ -45,7 +45,22 @@ Trong mô hình **MVC (Model – View – Controller)**, Controller nằm ở **
 
 ---
 
-### 2. Cấu trúc lớp Controller
+### 2. Cấu trúc thư mục cơ bản (gợi ý)
+
+```
+src
+└── main
+    └── java
+        └── com.example.demo
+            ├── controller      // Xử lý yêu cầu HTTP
+            ├── service         // Xử lý logic nghiệp vụ
+            ├── repository      // Kết nối database (sau này dùng JPA)
+            ├── model           // Định nghĩa Entity hoặc class đơn giản
+            └── dto             // Các lớp trung gian truyền dữ liệu
+```
+
+
+### 3. Cấu trúc lớp Controller
 
 ```java
 @RestController
@@ -84,7 +99,7 @@ public class UserController {
 }
 ```
 
-### 3. Các cách định nghĩa route khác nhau
+### 4. Các cách định nghĩa route khác nhau
 
 #### a. Sử dụng `@RequestMapping` với method
 
@@ -122,7 +137,7 @@ public List<User> getUsersV1() {
 }
 ```
 
-### 3. Các annotation thường dùng
+### 5. Các annotation thường dùng
 
 | Annotation        | Chức năng                                         |
 | ----------------- | ------------------------------------------------- |
@@ -139,7 +154,7 @@ public List<User> getUsersV1() {
 
 ---
 
-### 4. Best Practices
+### 6. Best Practices
 
 1. **Sử dụng base URL**: Định nghĩa base URL cho controller
 
@@ -178,7 +193,7 @@ public class UserControllerV1 { }
 public class UserControllerV2 { }
 ```
 
-### 5. Path Route và Các Pattern Matching
+### 7. Path Route và Các Pattern Matching
 
 #### a. Path Variables
 
@@ -282,7 +297,7 @@ public User getUser(@PathVariable User user) {
 }
 ```
 
-### 6. Lưu ý khi sử dụng Path Route
+### 8. Lưu ý khi sử dụng Path Route
 
 1. **Thứ tự ưu tiên của routes**:
 
@@ -315,22 +330,6 @@ public class UserController {
         return userService.findById(id);
     }
 }
-```
-
----
-
-## IV. 📁 Cấu trúc thư mục cơ bản (gợi ý)
-
-```
-src
-└── main
-    └── java
-        └── com.example.demo
-            ├── controller      // Xử lý yêu cầu HTTP
-            ├── service         // Xử lý logic nghiệp vụ
-            ├── repository      // Kết nối database (sau này dùng JPA)
-            ├── model           // Định nghĩa Entity hoặc class đơn giản
-            └── dto             // Các lớp trung gian truyền dữ liệu
 ```
 
 ---

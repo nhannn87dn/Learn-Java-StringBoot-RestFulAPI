@@ -183,3 +183,133 @@ public class DemoApplication {
 
 ---
 
+## VII🌐 Quản lý dependencies strong String boot
+
+### 1. **Dependencies là gì?**
+
+Trong phát triển phần mềm, **dependency** là các thư viện/phần mềm bên ngoài mà ứng dụng của bạn cần để hoạt động. Spring Boot giúp đơn giản hóa việc quản lý này bằng cách cung cấp một hệ thống quản lý phụ thuộc (dependencies) thông qua **Maven** hoặc **Gradle**.
+
+---
+
+### 2. **Spring Boot Starter – cách đơn giản hóa dependencies**
+
+Spring Boot giới thiệu khái niệm **"Starter"** – là một tập hợp các dependencies đã được đóng gói sẵn để phục vụ một mục đích cụ thể. Thay vì phải khai báo từng thư viện riêng lẻ, bạn chỉ cần khai báo 1 dòng.
+
+#### 🔹 Ví dụ:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+```
+
+Dòng trên sẽ bao gồm:
+
+* Spring MVC
+* Embedded Tomcat
+* Jackson (JSON)
+* Logging (SLF4J, Logback)
+
+➡️ Giúp bạn tạo API Web nhanh chóng mà không cần cài từng thư viện một.
+
+---
+
+### 3. **Cách thêm dependencies trong Spring Boot**
+
+#### 📌 Với Maven (pom.xml)
+
+Khai báo trong thẻ `<dependencies>`:
+
+```xml
+<dependencies>
+    <!-- Starter cho Web -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!-- Starter cho JPA -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+</dependencies>
+```
+
+#### 📌 Với Gradle (build.gradle)
+
+```groovy
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+}
+```
+
+---
+
+### 4. **Một số Starter phổ biến trong Spring Boot**
+
+| Starter                          | Chức năng                                    |
+| -------------------------------- | -------------------------------------------- |
+| `spring-boot-starter-web`        | Tạo REST API và web app                      |
+| `spring-boot-starter-data-jpa`   | Truy vấn cơ sở dữ liệu với JPA/Hibernate     |
+| `spring-boot-starter-security`   | Bảo mật (xác thực, phân quyền)               |
+| `spring-boot-starter-validation` | Xác thực đầu vào (annotation như `@NotNull`) |
+| `spring-boot-starter-thymeleaf`  | Kết xuất giao diện HTML                      |
+| `spring-boot-starter-test`       | Hỗ trợ viết unit test và integration test    |
+
+---
+
+### 5. **Quản lý phiên bản dependencies**
+
+Spring Boot đi kèm với **BOM (Bill of Materials)** để tự động quản lý phiên bản dependencies giúp bạn, nghĩa là bạn **không cần ghi rõ version** của hầu hết thư viện starter.
+
+#### 🔹 Ví dụ:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+    <!-- Không cần khai báo version -->
+</dependency>
+```
+
+> Spring Boot sẽ tự lấy version tương thích theo version bạn đang dùng (ví dụ: 3.2.x).
+
+---
+
+### 6. **Khi nào cần chỉ định version thủ công?**
+
+* Khi thêm **thư viện ngoài** không thuộc Spring Boot Starter.
+* Khi muốn **ghi đè version mặc định** do Spring Boot cung cấp.
+* Khi cần kiểm soát tương thích hoặc sửa lỗi phiên bản cụ thể.
+
+---
+
+### 7. **Quản lý dependency hiệu quả – mẹo cho dự án lớn**
+
+* ✅ Chỉ thêm những gì bạn thực sự cần.
+* ✅ Luôn kiểm tra dependency có bị conflict hay không.
+* ✅ Dùng lệnh Maven/Gradle để xem cây phụ thuộc:
+
+  * Maven:
+
+    ```bash
+    ./mvnw dependency:tree
+    ```
+  * Gradle:
+
+    ```bash
+    ./gradlew dependencies
+    ```
+* ✅ Dùng `spring-boot-starter-parent` trong `pom.xml` để tự động kế thừa cấu hình tốt nhất.
+
+### 8. Các lệnh CLI hay dùng nhất
+
+| Mục đích                 | Maven                    | Gradle                   |
+| ------------------------ | ------------------------ | ------------------------ |
+| Build + tải dependencies | `./mvnw clean install`   | `./gradlew build`        |
+| Xem cây dependencies     | `./mvnw dependency:tree` | `./gradlew dependencies` |
+| Liệt kê dependencies     | `./mvnw dependency:list` | `./gradlew dependencies` |
+| Xóa build cũ             | `./mvnw clean`           | `./gradlew clean`        |
