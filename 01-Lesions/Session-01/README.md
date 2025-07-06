@@ -307,9 +307,10 @@ Spring Boot đi kèm với **BOM (Bill of Materials)** để tự động quản
 
 ### 8. Các lệnh CLI hay dùng nhất
 
-| Mục đích                 | Maven                    | Gradle                   |
-| ------------------------ | ------------------------ | ------------------------ |
-| Build + tải dependencies | `./mvnw clean install`   | `./gradlew build`        |
-| Xem cây dependencies     | `./mvnw dependency:tree` | `./gradlew dependencies` |
-| Liệt kê dependencies     | `./mvnw dependency:list` | `./gradlew dependencies` |
-| Xóa build cũ             | `./mvnw clean`           | `./gradlew clean`        |
+| 🧩 **Mục đích**             | **Maven (Linux/macOS)**  | **Maven (Windows CMD)** | **Gradle (Linux/macOS)** | **Gradle (Windows CMD)** |
+| --------------------------- | ------------------------ | ----------------------- | ------------------------ | ------------------------ |
+| 🔨 Build + tải dependencies | `./mvnw clean install`   | `mvnw clean install`    | `./gradlew build`        | `gradlew build`          |
+| 🌳 Xem cây dependencies     | `./mvnw dependency:tree` | `mvnw dependency:tree`  | `./gradlew dependencies` | `gradlew dependencies`   |
+| 📃 Liệt kê dependencies     | `./mvnw dependency:list` | `mvnw dependency:list`  | `./gradlew dependencies` | `gradlew dependencies`   |
+| ♻️ Xoá build cũ             | `./mvnw clean`           | `mvnw clean`            | `./gradlew clean`        | `gradlew clean`          |
+
