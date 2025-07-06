@@ -115,6 +115,140 @@ java -version
 
 * Để quản lý mã nguồn: [https://git-scm.com/](https://git-scm.com/)
 
+### 5. ✅ HƯỚNG DẪN CẤU HÌNH `JAVA_HOME` CHO JAVA 21
+
+#### 🪟 **PHẦN 1: Trên Windows**
+
+🔧 Bước 1: Cài đặt Java 21
+
+* Tải Java 21 từ Oracle hoặc OpenJDK:
+
+  * [Oracle JDK 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
+  * [OpenJDK 21](https://jdk.java.net/21/)
+
+* Giải nén hoặc cài vào thư mục (ví dụ):
+
+  ```
+  C:\Program Files\Java\jdk-21
+  ```
+
+---
+
+⚙️ Bước 2: Thiết lập biến môi trường
+
+1. Mở **Start menu** → tìm **Environment Variables** → chọn `Edit the system environment variables`.
+
+2. Trong tab **Advanced** → nhấn **Environment Variables...**
+
+3. Ở mục **System variables**, nhấn **New\...**
+
+   * **Variable name**: `JAVA_HOME`
+   * **Variable value**: `C:\Program Files\Java\jdk-21`
+
+4. Chọn biến `Path` → **Edit...** → **New**
+
+   * Thêm: `%JAVA_HOME%\bin`
+
+---
+
+Bước 3: Kiểm tra
+
+Mở **Command Prompt (cmd)** và chạy:
+
+```bash
+echo %JAVA_HOME%
+java -version
+```
+
+Kết quả mong đợi:
+
+```
+C:\Program Files\Java\jdk-21
+java version "21"
+```
+
+---
+
+#### 🐧 **PHẦN 2: Trên Linux (Ubuntu/Debian)**
+
+ 🔧 Bước 1: Cài đặt OpenJDK 21
+
+```bash
+sudo apt update
+sudo apt install openjdk-21-jdk
+```
+
+---
+
+Bước 2: Tìm đường dẫn cài đặt JDK
+
+Chạy:
+
+```bash
+readlink -f $(which java)
+```
+
+Ví dụ kết quả:
+
+```
+/usr/lib/jvm/java-21-openjdk-amd64/bin/java
+```
+
+⇒ Đường dẫn `JAVA_HOME` là:
+
+```
+/usr/lib/jvm/java-21-openjdk-amd64
+```
+
+---
+
+Bước 3: Cấu hình `JAVA_HOME` trong `.bashrc` hoặc `.zshrc`
+
+```bash
+nano ~/.bashrc   # hoặc ~/.zshrc nếu bạn dùng zsh
+```
+
+Thêm vào cuối file:
+
+```bash
+export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
+export PATH="$JAVA_HOME/bin:$PATH"
+```
+
+Lưu lại rồi áp dụng:
+
+```bash
+source ~/.bashrc
+```
+
+---
+
+Bước 4: Kiểm tra
+
+```bash
+echo $JAVA_HOME
+java -version
+```
+
+Kết quả mong đợi:
+
+```
+/usr/lib/jvm/java-21-openjdk-amd64
+java version "21"
+```
+
+---
+
+📌 Ghi chú thêm
+
+* Nếu cài nhiều phiên bản Java, có thể dùng:
+
+  ```bash
+  sudo update-alternatives --config java
+  ```
+
+* Bạn cũng có thể dùng [SDKMAN](https://sdkman.io/) để quản lý Java versions tiện lợi trên Linux/macOS.
+
 ---
 
 ## IV. 🌐 Tạo Project đầu tiên với Spring Initializr
@@ -179,6 +313,8 @@ public class DemoApplication {
 
 ```bash
 ./mvnw spring-boot:run
+# or
+./gradlew bootRun
 ```
 
 ---
@@ -305,12 +441,25 @@ Spring Boot đi kèm với **BOM (Bill of Materials)** để tự động quản
     ```
 * ✅ Dùng `spring-boot-starter-parent` trong `pom.xml` để tự động kế thừa cấu hình tốt nhất.
 
-### 8. Các lệnh CLI hay dùng nhất
+### 8. Các lệnh CLI Maven và Gradle
 
-| 🧩 **Mục đích**             | **Maven (Linux/macOS)**  | **Maven (Windows CMD)** | **Gradle (Linux/macOS)** | **Gradle (Windows CMD)** |
-| --------------------------- | ------------------------ | ----------------------- | ------------------------ | ------------------------ |
-| 🔨 Build + tải dependencies | `./mvnw clean install`   | `mvnw clean install`    | `./gradlew build`        | `gradlew build`          |
-| 🌳 Xem cây dependencies     | `./mvnw dependency:tree` | `mvnw dependency:tree`  | `./gradlew dependencies` | `gradlew dependencies`   |
-| 📃 Liệt kê dependencies     | `./mvnw dependency:list` | `mvnw dependency:list`  | `./gradlew dependencies` | `gradlew dependencies`   |
-| ♻️ Xoá build cũ             | `./mvnw clean`           | `mvnw clean`            | `./gradlew clean`        | `gradlew clean`          |
+| 🧩 **Mục đích**                   | **Maven (Linux/macOS)**          | **Maven (Windows CMD)**        | **Gradle (Linux/macOS)**        | **Gradle (Windows CMD)**      |
+| --------------------------------- | -------------------------------- | ------------------------------ | ------------------------------- | ----------------------------- |
+| 🔨 Build + tải dependencies       | `./mvnw clean install`           | `mvnw clean install`           | `./gradlew build`               | `gradlew build`               |
+| 🌳 Xem cây dependencies           | `./mvnw dependency:tree`         | `mvnw dependency:tree`         | `./gradlew dependencies`        | `gradlew dependencies`        |
+| 📃 Liệt kê dependencies           | `./mvnw dependency:list`         | `mvnw dependency:list`         | `./gradlew dependencies`        | `gradlew dependencies`        |
+| ♻️ Xoá build cũ                   | `./mvnw clean`                   | `mvnw clean`                   | `./gradlew clean`               | `gradlew clean`               |
+| 🚀 Chạy ứng dụng Spring Boot      | `./mvnw spring-boot:run`         | `mvnw spring-boot:run`         | `./gradlew bootRun`             | `gradlew bootRun`             |
+| 🧪 Chạy test                      | `./mvnw test`                    | `mvnw test`                    | `./gradlew test`                | `gradlew test`                |
+| 🧼 Chạy clean + build test        | `./mvnw clean test`              | `mvnw clean test`              | `./gradlew clean test`          | `gradlew clean test`          |
+| 📦 Đóng gói ứng dụng (JAR)        | `./mvnw package`                 | `mvnw package`                 | `./gradlew bootJar`             | `gradlew bootJar`             |
+| 📦 Đóng gói ứng dụng (WAR)        | `./mvnw package -Pwar`           | `mvnw package -Pwar`           | `./gradlew bootWar`             | `gradlew bootWar`             |
+| 📥 Tải dependencies (offline)     | `./mvnw dependency:go-offline`   | `mvnw dependency:go-offline`   | `./gradlew build --offline`     | `gradlew build --offline`     |
+| ⛔ Bỏ qua test khi build           | `./mvnw install -DskipTests`     | `mvnw install -DskipTests`     | `./gradlew build -x test`       | `gradlew build -x test`       |
+| 🧪 Test với báo cáo chi tiết      | `./mvnw surefire-report:report`  | `mvnw surefire-report:report`  | *(dùng plugin ngoài)*           | *(dùng plugin ngoài)*         |
+| 🧰 Xem task khả dụng              | `./mvnw help:describe`           | `mvnw help:describe`           | `./gradlew tasks`               | `gradlew tasks`               |
+| 🔍 Xem hiệu lực `pom.xml`         | `./mvnw help:effective-pom`      | `mvnw help:effective-pom`      | *(Không áp dụng trực tiếp)*     | *(Không áp dụng trực tiếp)*   |
+| 🔍 Xem thuộc tính cấu hình Gradle | *(Không có)*                     | *(Không có)*                   | `./gradlew properties`          | `gradlew properties`          |
+| 📂 Xem cấu trúc project Gradle    | *(Không có)*                     | *(Không có)*                   | `./gradlew projects`            | `gradlew projects`            |
+| 🧱 Xem mô-đun con (multi-module)  | `./mvnw help:effective-settings` | `mvnw help:effective-settings` | `./gradlew components` (plugin) | `gradlew components` (plugin) |
 
