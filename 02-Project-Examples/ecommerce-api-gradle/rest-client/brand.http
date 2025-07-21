@@ -1,6 +1,23 @@
+PUT http://localhost:8080/api/brands/6
+Content-Type: 'application/json; charset=utf-8'
+
+{
+   "description": "New Brand Description dsdsdsdsd",
+}
+
+###
+GET http://localhost:8080/api/brands
+
+###
+
 POST http://localhost:8080/api/brands
 Content-Type: application/json
 
 {
-    
+   "name": "New Brand Name 2",
+   "description": "New Brand Description 2"
 }
+
+
+###
+DELETE http://localhost:8080/api/brands/6

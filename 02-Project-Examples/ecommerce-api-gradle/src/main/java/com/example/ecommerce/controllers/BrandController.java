@@ -5,7 +5,6 @@ import com.example.ecommerce.responses.ApiResponse;
 
 import com.example.ecommerce.dtos.brand.BrandCreateDto;
 import com.example.ecommerce.dtos.brand.BrandUpdateDto;
-import com.example.ecommerce.dtos.brand.BrandDeleteDto;
 import com.example.ecommerce.dtos.brand.BrandResponseDto;
 import com.example.ecommerce.services.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,16 +55,16 @@ public class BrandController {
     }
 
 
-    @PutMapping
-    public ResponseEntity<ApiResponse<BrandResponseDto>> updateBrand(@Valid @RequestBody BrandUpdateDto brandUpdateDto) {
-        BrandResponseDto updatedBrand = brandService.updateBrand(brandUpdateDto);
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<BrandResponseDto>> updateBrand(@PathVariable Long id, @Valid @RequestBody BrandUpdateDto brandUpdateDto) {
+        BrandResponseDto updatedBrand = brandService.updateBrandById(id,brandUpdateDto);
         return ResponseEntity.ok(ApiResponse.success("Brand updated successfully", updatedBrand));
     }
 
 
-    @DeleteMapping
-    public ResponseEntity<ApiResponse<Void>> deleteBrand(@Valid @RequestBody BrandDeleteDto brandDeleteDto) {
-        brandService.deleteBrand(brandDeleteDto);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteBrand(@PathVariable Long id) {
+        brandService.deleteBrandById(id);
         return ResponseEntity.ok(ApiResponse.success("Brand deleted successfully"));
     }
 }

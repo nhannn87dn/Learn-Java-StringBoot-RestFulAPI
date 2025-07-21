@@ -1,3 +1,4 @@
+
 package com.example.ecommerce.services;
 
 import com.example.ecommerce.entities.Brand;
@@ -5,7 +6,6 @@ import com.example.ecommerce.repositories.BrandRepository;
 import com.example.ecommerce.exceptions.NotFoundException;
 import com.example.ecommerce.dtos.brand.BrandCreateDto;
 import com.example.ecommerce.dtos.brand.BrandUpdateDto;
-import com.example.ecommerce.dtos.brand.BrandDeleteDto;
 import com.example.ecommerce.dtos.brand.BrandResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,20 +37,15 @@ public class BrandService {
         return toResponseDto(saved);
     }
 
-    public BrandResponseDto updateBrand(BrandUpdateDto dto) {
-        Brand brand = brandRepository.findById(dto.getId())
-                .orElseThrow(() -> new NotFoundException("Brand not found with id: " + dto.getId()));
+    public BrandResponseDto updateBrandById(Long id, BrandUpdateDto dto) {
+        Brand brand = brandRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Brand not found with id: " + id));
         brand.setBrandName(dto.getName());
         brand.setBrandDescription(dto.getDescription());
         Brand saved = brandRepository.save(brand);
         return toResponseDto(saved);
     }
 
-    public void deleteBrand(BrandDeleteDto dto) {
-        Brand brand = brandRepository.findById(dto.getId())
-                .orElseThrow(() -> new NotFoundException("Brand not found with id: " + dto.getId()));
-        brandRepository.delete(brand);
-    }
 
     private BrandResponseDto toResponseDto(Brand brand) {
         return new BrandResponseDto(
@@ -58,5 +53,10 @@ public class BrandService {
                 brand.getBrandName(),
                 brand.getBrandDescription()
         );
+    }
+    public void deleteBrandById(Long id) {
+        Brand brand = brandRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Brand not found with id: " + id));
+        brandRepository.delete(brand);
     }
 }
